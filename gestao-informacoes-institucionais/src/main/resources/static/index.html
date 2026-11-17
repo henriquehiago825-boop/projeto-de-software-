@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MVP para organização e consulta de informações institucionais.">
+  <title>Gestão Institucional</title><link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar"><div class="brand"><span class="brand-mark" aria-hidden="true">GI</span><div><strong>Gestão Institucional</strong><small>Organização de informações</small></div></div><span class="status"><i></i> Ambiente de demonstração</span></header>
+  <main class="container">
+    <section id="home" class="screen active" aria-labelledby="home-title">
+      <div class="welcome"><p class="eyebrow">BEM-VINDO(A)</p><h1 id="home-title">Informações organizadas,<br><span>acesso simplificado.</span></h1><p>Centralize os registros da instituição em um só lugar.</p></div>
+      <div class="section-heading"><div><p class="eyebrow">MENU PRINCIPAL</p><h2>O que deseja fazer?</h2></div></div>
+      <div class="action-grid">
+        <button class="action-card primary-card" data-go="cadastro"><span class="action-icon" aria-hidden="true">＋</span><span><strong>Cadastrar informações</strong><small>Registre um novo comunicado ou informação.</small></span><b aria-hidden="true">→</b></button>
+        <button class="action-card" data-go="consulta"><span class="action-icon search-icon" aria-hidden="true">⌕</span><span><strong>Consultar informações</strong><small>Pesquise e encontre registros existentes.</small></span><b aria-hidden="true">→</b></button>
+      </div>
+      <div class="notice"><span aria-hidden="true">ⓘ</span><p><strong>Mais organização no dia a dia</strong><br>Consulte os registros de forma simples e rápida.</p></div>
+    </section>
+
+    <section id="cadastro" class="screen" aria-labelledby="cadastro-title">
+      <button class="back-link" data-go="home">← Voltar ao início</button>
+      <div class="page-heading"><p class="eyebrow">NOVO REGISTRO</p><h1 id="cadastro-title">Cadastrar informações</h1><p>Preencha os campos para adicionar uma informação à instituição.</p></div>
+      <form id="form-cadastro" class="panel">
+        <label for="categoria">Categoria <span>*</span></label><select id="categoria" name="categoria" required><option value="">Selecione uma categoria</option><option>Comunicado</option><option>Evento</option><option>Informativo</option><option>Aviso</option></select>
+        <label for="titulo">Título <span>*</span></label><input id="titulo" name="titulo" maxlength="120" required placeholder="Ex.: Reunião Institucional">
+        <label for="descricao">Descrição <span>*</span></label><textarea id="descricao" name="descricao" maxlength="500" rows="4" required placeholder="Descreva brevemente a informação (até 500 caracteres)."></textarea><div class="field-hint"><span>Máximo de 500 caracteres.</span><span id="contador">0/500</span></div>
+        <label for="dataReferencia">Data <span>*</span></label><input id="dataReferencia" name="dataReferencia" type="date" required>
+        <div class="form-actions"><button class="btn btn-secondary" type="reset">Limpar</button><button class="btn btn-primary" type="submit">Salvar cadastro</button></div>
+        <p id="form-feedback" class="feedback" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section id="consulta" class="screen" aria-labelledby="consulta-title">
+      <button class="back-link" data-go="home">← Voltar ao início</button>
+      <div class="page-heading"><p class="eyebrow">REGISTROS DA INSTITUIÇÃO</p><h1 id="consulta-title">Consultar informações</h1><p>Pesquise por título ou filtre os registros por categoria.</p></div>
+      <div class="filters panel"><div class="search-wrap"><label for="busca">Buscar informação</label><input id="busca" type="search" placeholder="Digite o título do registro..."></div><div><label for="filtro-categoria">Categoria</label><select id="filtro-categoria"><option value="">Todas as categorias</option><option>Comunicado</option><option>Evento</option><option>Informativo</option><option>Aviso</option></select></div><button id="limpar-filtros" class="btn btn-secondary">Limpar filtros</button></div>
+      <div class="results-heading"><h2>Resultados</h2><span id="total-registros" class="count">Carregando...</span></div>
+      <div id="lista-registros" class="record-list" aria-live="polite"><div class="empty-state">Acesse Consultas para carregar os registros.</div></div>
+    </section>
+  </main>
+  <nav class="bottom-nav" aria-label="Navegação principal"><button class="nav-item active" data-go="home"><span aria-hidden="true">⌂</span>Início</button><button class="nav-item" data-go="cadastro"><span aria-hidden="true">＋</span>Cadastros</button><button class="nav-item" data-go="consulta"><span aria-hidden="true">⌕</span>Consultas</button></nav>
+  <dialog id="modal-edicao" class="edit-dialog">
+    <form id="form-edicao" method="dialog">
+      <div class="dialog-heading"><div><p class="eyebrow">GERENCIAR CADASTRO</p><h2>Editar informação</h2></div><button type="button" id="fechar-modal" class="close-modal" aria-label="Fechar">×</button></div>
+      <input type="hidden" id="edit-id">
+      <label for="edit-categoria">Categoria <span>*</span></label>
+      <select id="edit-categoria" required><option value="">Selecione uma categoria</option><option>Comunicado</option><option>Evento</option><option>Informativo</option><option>Aviso</option></select>
+      <label for="edit-titulo">Título <span>*</span></label><input id="edit-titulo" maxlength="120" required>
+      <label for="edit-descricao">Descrição <span>*</span></label><textarea id="edit-descricao" maxlength="500" rows="4" required></textarea>
+      <label for="edit-data">Data <span>*</span></label><input id="edit-data" type="date" required>
+      <div class="form-actions"><button type="button" id="cancelar-edicao" class="btn btn-secondary">Cancelar</button><button type="submit" class="btn btn-primary">Salvar alterações</button></div>
+      <p id="edit-feedback" class="feedback" role="status" aria-live="polite"></p>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/app.js"></script>
+</body></html>
