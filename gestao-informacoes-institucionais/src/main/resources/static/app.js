@@ -8,6 +8,7 @@ const descricao = document.getElementById('descricao');
 const modal = document.getElementById('modal-edicao');
 let toastTimer;
 let buscaTimer;
+let registrosAtuais = [];
 
 function navegar(id) {
   telas.forEach(t => t.classList.toggle('active', t.id === id));
@@ -53,6 +54,7 @@ async function carregarRegistros() {
   if (busca) params.set('busca', busca); if (categoria) params.set('categoria', categoria);
   try {
     const registros = await requisicao(`/api/informacoes?${params.toString()}`);
+    registrosAtuais = registros;
     total.textContent = `${registros.length} ${registros.length === 1 ? 'registro encontrado' : 'registros encontrados'}`;
     if (!registros.length) { lista.innerHTML = '<div class="empty-state">Nenhuma informação encontrada. Experimente alterar os filtros ou cadastre um novo registro.</div>'; return; }
     lista.innerHTML = registros.map(item => `<article class="record"><div class="record-icon" aria-hidden="true">▤</div><div class="record-content"><h3>${escapar(item.titulo)}</h3><p>${escapar(item.descricao)}</p></div><div class="record-meta"><span class="tag">${escapar(item.categoria)}</span><time datetime="${escapar(item.dataReferencia)}">${formatarData(item.dataReferencia)}</time><button class="edit-button" type="button" data-edit="${Number(item.id)}">Editar</button></div></article>`).join('');
@@ -62,8 +64,7 @@ lista.addEventListener('click', async (event) => {
   const botao = event.target.closest('[data-edit]');
   if (!botao) return;
   try {
-    const registros = await requisicao('/api/informacoes');
-    const item = registros.find(registro => Number(registro.id) === Number(botao.dataset.edit));
+   const item = registrosAtuais.find(registro => Number(registro.id) === Number(botao.dataset.edit));
     if (!item) throw new Error('Registro não encontrado. Atualize a consulta.');
     document.getElementById('edit-id').value = item.id;
     document.getElementById('edit-categoria').value = item.categoria;
